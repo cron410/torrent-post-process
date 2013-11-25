@@ -1,5 +1,3 @@
-#! /bin/python
-
 #
 # Use: python post.py <torrent_output_path> <movies_dir> <series_dir>
 #
@@ -23,7 +21,7 @@ def recursive_list_files(fs_path):
 		for filename in filenames:
 			yield os.path.join(dirname, filename)
 
-# recursively finds all video files under a file directory
+# finds all video files located under a directory
 def find_video_files(fs_path):
 	if (os.path.isfile(fs_path) and is_video_file(fs_path)):
 		return fs_path
@@ -51,6 +49,9 @@ def process_all_files(fs_path):
 	if (undecided):
 		print "Unable to detect video type for: " + str(undecided)
 
+# Extracts the base filename from file_pat and creates
+# a missing subtitle flag (eg: "movie.en.srt.pending")
+# in the destination directory
 def flag_required_subtitles(file_path, destination):
 	file_name = os.path.splitext(os.path.basename(file_path))[0]
 	es_flag = os.path.join(destination, file_name + ".es.srt.pending")
@@ -59,7 +60,7 @@ def flag_required_subtitles(file_path, destination):
 	open(en_flag, 'w').close()
 
 # Moves the video to the destination file (creating it if necessary),
-# and creates an empty file for each missing subtitle (eg: "movie.es.srt.pending")
+# and creates missing subtitle flags
 def locate(origin, destination):
 	if (not os.path.exists(destination)):
 		os.makedirs(destination)
