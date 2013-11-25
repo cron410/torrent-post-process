@@ -70,8 +70,8 @@ def flag_required_subtitles(basename, destination):
 	open(es_flag, 'w').close()
 	open(en_flag, 'w').close()
 
-# Moves the video to the destination file (creating it if necessary),
-# and creates missing subtitle flags
+# Creates a hard link to the video in the destination directory
+# (creating it if necessary), and creates missing subtitle flags
 def locate(origin, destination):
 	if (not os.path.exists(destination)):
 		os.makedirs(destination)
