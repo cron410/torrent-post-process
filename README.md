@@ -47,7 +47,7 @@ have been created so that subtitles.py can do its magic.
 Script that scans a video directory looking for missing subtitle flag files (eg "movie.en.srt.pending")
 and downloads its subtitles.
 
-On the previous example, running `python subtitles.py ./movies' would produce the following:
+On the previous example, running `python subtitles.py ./movies` would produce the following:
 
 ```
 movies
