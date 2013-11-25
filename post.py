@@ -8,7 +8,7 @@
 import os
 import guessit
 import argparse
-
+import fs_help
 
 def parse_args():
 	parser = argparse.ArgumentParser(description='Process Transmission output')
@@ -25,18 +25,9 @@ def is_video_file(fs_path):
 	file_info = guessit.guess_video_info(fs_path)
 	return ('mimetype' in file_info) and file_info['mimetype'].startswith("video/")
 
-# recursively list all files (not directories!) under the path
-def recursive_list_files(fs_path):
-	if (os.path.isfile(fs_path)):
-		yield fs_path
-	else:
-		for dirname, dirnames, filenames in os.walk(fs_path):
-			for filename in filenames:
-				yield os.path.join(dirname, filename)
-
 # finds all video files located under a directory
 def find_video_files(fs_path):
-	all_files = recursive_list_files(fs_path)
+	all_files = fs_help.recursive_list_files(fs_path)
 	return filter(is_video_file, all_files)
 
 # 
@@ -63,9 +54,8 @@ def process_all_files(fs_path):
 # a missing subtitle flag (eg: "movie.en.srt.pending")
 # in the destination directory
 def flag_required_subtitles(basename, destination):
-	name_no_extension = os.path.splitext(basename)[0]
-	es_flag = os.path.join(destination, name_no_extension + ".es.srt.pending")
-	en_flag = os.path.join(destination, name_no_extension + ".en.srt.pending")
+	es_flag = os.path.join(destination, basename + ".es.srt.pending")
+	en_flag = os.path.join(destination, basename + ".en.srt.pending")
 	open(es_flag, 'w').close()
 	open(en_flag, 'w').close()
 
