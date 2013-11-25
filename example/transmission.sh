@@ -15,7 +15,7 @@
 
 
 # CONFIGURATION
-RELOCATE_SCRIPT=/home/pi/transmission/post-torrent.py
+RELOCATE_SCRIPT=/home/pi/transmission/relocate.py
 SUBTITLES_SCRIPT=/home/pi/transmission/subtitles.py
 VIDEO_PATH=/mnt/PASSPORT/video
 
