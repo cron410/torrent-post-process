@@ -1,14 +1,26 @@
+##############################################################################
 #
-# Use: python post.py <torrent_output_path> <movies_dir> <series_dir>
+# Usage:
+# prueba.py [-h] torrent_path movies_dir series_dir
 #
+##############################################################################
 
 import os
 import guessit
 import sys
+import argparse
 
-torrent_output_path = "./input"
-movies_dir = "./movies"
-series_dir = "./series"
+
+def parse_args():
+	parser = argparse.ArgumentParser(description='Process Transmission output')
+	parser.add_argument('torrent_path', type=str,
+						help='location where transmission downloaded the torrent')
+	parser.add_argument('movies_dir', type=str,
+						help='directory where movies will be relocated')
+	parser.add_argument('series_dir', type=str,
+						help='directory where tv episoded will be relocated')
+	return parser.parse_args()
+
 
 def is_video_file(fs_path):
 	file_info = guessit.guess_video_info(fs_path)
@@ -77,5 +89,14 @@ def process_movie_file(file_path, metadata):
 def process_episode_file(file_path, metadata):
 	dest = os.path.join(series_dir, metadata["series"], "s" + str(metadata["season"]).zfill(2))
 	locate (file_path, dest)
+
+
+##############################################################################
+
+args = parse_args()
+
+torrent_output_path = args.torrent_path
+movies_dir = args.movies_dir
+series_dir = args.series_dir
 
 process_all_files(torrent_output_path)
