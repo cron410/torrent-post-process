@@ -7,7 +7,6 @@
 
 import os
 import guessit
-import sys
 import argparse
 
 
@@ -82,11 +81,14 @@ def locate(origin, destination):
 	os.link(origin, target_file)
 
 def process_movie_file(file_path, metadata):
-	dest = os.path.join(movies_dir, metadata["title"])
+	dest = os.path.join(movies_dir,
+						metadata["title"].lower())
 	locate (file_path, dest)
 
 def process_episode_file(file_path, metadata):
-	dest = os.path.join(series_dir, metadata["series"], "s" + str(metadata["season"]).zfill(2))
+	dest = os.path.join(series_dir,
+						metadata["series"].lower(),
+						"s" + str(metadata["season"]).zfill(2))
 	locate (file_path, dest)
 
 
