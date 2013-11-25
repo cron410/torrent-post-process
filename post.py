@@ -4,7 +4,6 @@
 
 import os
 import guessit
-import shutil
 import sys
 
 torrent_output_path = "./input"
@@ -52,10 +51,10 @@ def process_all_files(fs_path):
 # Extracts the base filename from file_pat and creates
 # a missing subtitle flag (eg: "movie.en.srt.pending")
 # in the destination directory
-def flag_required_subtitles(file_path, destination):
-	file_name = os.path.splitext(os.path.basename(file_path))[0]
-	es_flag = os.path.join(destination, file_name + ".es.srt.pending")
-	en_flag = os.path.join(destination, file_name + ".en.srt.pending")
+def flag_required_subtitles(basename, destination):
+	name_no_extension = os.path.splitext(basename)[0]
+	es_flag = os.path.join(destination, name_no_extension + ".es.srt.pending")
+	en_flag = os.path.join(destination, name_no_extension + ".en.srt.pending")
 	open(es_flag, 'w').close()
 	open(en_flag, 'w').close()
 
@@ -64,12 +63,14 @@ def flag_required_subtitles(file_path, destination):
 def locate(origin, destination):
 	if (not os.path.exists(destination)):
 		os.makedirs(destination)
-	flag_required_subtitles(origin, destination)
-	shutil.move(origin, destination)
+
+	basename = os.path.basename(origin)
+	target_file = os.path.join(destination, basename)
+	flag_required_subtitles(basename, destination)
+	os.link(origin, target_file)
 
 
 def process_movie_file(file_path, metadata):
-	file_name = os.path.splitext(file_path)[0]
 	dest = os.path.join(movies_dir, metadata["title"])
 	locate (file_path, dest)
 
