@@ -1,21 +1,17 @@
 #! /bin/python
 
+#
+# Use: python post.py <torrent_output_path> <movies_dir> <series_dir>
+#
+
 import os
 import guessit
+import shutil
 import sys
 
-# reads the path where transmission downloaded
-# the torrent from the system environment
-def transmission_output():
-	key = 'TR_TORRENT_NAME'
-	if (key in os.environ):
-		path = os.environ[key]
-		if (os.path.exists(path)):
-			return path
-		else:
-			raise Exception("Transmission output dir does not exist")
-	else:
-		raise Exception("Transmission output environment variable not set")
+torrent_output_path = "./input"
+movies_dir = "./movies"
+series_dir = "./series"
 
 def is_video_file(fs_path):
 	file_info = guessit.guess_video_info(fs_path)
@@ -35,6 +31,13 @@ def find_video_files(fs_path):
 		all_files = recursive_list_files(fs_path)
 		return filter(is_video_file, all_files)
 
+# 
+# recursively transverses the directory, detecting video files:
+#
+# - caregorizing them by type (movies/series)
+# - relocates them in their corresponding directory
+# - creates empty flag files for missing subtitles
+#
 def process_all_files(fs_path):
 	undecided = []
 	for f in find_video_files(fs_path):
@@ -48,9 +51,29 @@ def process_all_files(fs_path):
 	if (undecided):
 		print "Unable to detect video type for: " + str(undecided)
 
+def flag_required_subtitles(file_path, destination):
+	file_name = os.path.splitext(os.path.basename(file_path))[0]
+	es_flag = os.path.join(destination, file_name + ".es.srt.pending")
+	en_flag = os.path.join(destination, file_name + ".en.srt.pending")
+	open(es_flag, 'w').close()
+	open(en_flag, 'w').close()
+
+# Moves the video to the destination file (creating it if necessary),
+# and creates an empty file for each missing subtitle (eg: "movie.es.srt.pending")
+def locate(origin, destination):
+	if (not os.path.exists(destination)):
+		os.makedirs(destination)
+	flag_required_subtitles(origin, destination)
+	shutil.move(origin, destination)
+
+
 def process_movie_file(file_path, metadata):
-	print "Movie!"
+	file_name = os.path.splitext(file_path)[0]
+	dest = os.path.join(movies_dir, metadata["title"])
+	locate (file_path, dest)
 
 def process_episode_file(file_path, metadata):
-	print "Episode!"
+	dest = os.path.join(series_dir, metadata["series"], "s" + str(metadata["season"]).zfill(2))
+	locate (file_path, dest)
 
+process_all_files(torrent_output_path)
