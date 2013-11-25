@@ -1,5 +1,8 @@
 ##############################################################################
 #
+# Scans the video directory for missing subtitle flag files, and tries to
+# download the subtitles.
+#
 # Usage:
 # subtitles.py [-h] video_path
 #
@@ -13,7 +16,9 @@ import re
 import shutil
 
 def parse_args():
-	parser = argparse.ArgumentParser(description='Download missing subtitles')
+	parser = argparse.ArgumentParser(description=
+			"""Scans the video directory for missing subtitle flag files,
+			and tries to download the subtitles.""")
 	parser.add_argument('video_path', type=str,
 						help='location where video files are stored')
 	return parser.parse_args()
@@ -43,8 +48,6 @@ def download_subtitle(video_file_path, language):
 	return True
 
 ##############################################################################
-
-
 
 args = parse_args()
 video_path = args.video_path

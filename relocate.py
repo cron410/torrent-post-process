@@ -1,7 +1,10 @@
 ##############################################################################
 #
+# Relocates video files after download and leaves a "flag file" that indicates
+# the need for downloading a subtitle.
+#
 # Usage:
-# post-torrent.py [-h] torrent_path movies_dir series_dir
+# relocate.py [-h] torrent_path movies_dir series_dir
 #
 ##############################################################################
 
@@ -11,7 +14,9 @@ import argparse
 import fs_help
 
 def parse_args():
-	parser = argparse.ArgumentParser(description='Process Transmission output')
+	parser = argparse.ArgumentParser(description=
+			"""Relocates video files after download and leaves a "flag file"
+			that indicates the need for downloading a subtitle.""")
 	parser.add_argument('torrent_path', type=str,
 						help='location where transmission downloaded the torrent')
 	parser.add_argument('movies_dir', type=str,
