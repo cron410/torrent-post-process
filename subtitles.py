@@ -42,10 +42,14 @@ def rename_subtitle(subtitle_path, language):
 	shutil.move(subtitle_path, destination)
 
 def download_subtitle(video_file_path, language):
-	print "downloading for " + video_file_path + " in " + language
+	print "Downloading subtitle for " + video_file_path + " in " + language
 	subtitle = subdl.downloadSubtitle(video_file_path, [language])
-	rename_subtitle(subtitle['subtitlepath'], language)
-	return True
+	if (subtitle):
+		rename_subtitle(subtitle['subtitlepath'], language)
+		return True
+	else:
+		print "Subtitle for " + video_file_path + " not found"
+		return False
 
 ##############################################################################
 
@@ -56,5 +60,5 @@ subdl = periscope.Periscope("/tmp/periscope-cache")
 for flag in subtitle_flags(video_path):
 	video_file = extract_video_file(flag)
 	language = extract_language(flag)
-	download_subtitle(video_file, language)
-	os.remove(flag)
+	if download_subtitle(video_file, language):
+		os.remove(flag)
