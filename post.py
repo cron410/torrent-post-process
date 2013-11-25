@@ -35,7 +35,7 @@ def recursive_list_files(fs_path):
 # finds all video files located under a directory
 def find_video_files(fs_path):
 	if (os.path.isfile(fs_path) and is_video_file(fs_path)):
-		return fs_path
+		return [fs_path]
 	elif (os.path.isdir(fs_path)):
 		all_files = recursive_list_files(fs_path)
 		return filter(is_video_file, all_files)
