@@ -28,17 +28,17 @@ def is_video_file(fs_path):
 
 # recursively list all files (not directories!) under the path
 def recursive_list_files(fs_path):
-	for dirname, dirnames, filenames in os.walk(fs_path):
-		for filename in filenames:
-			yield os.path.join(dirname, filename)
+	if (os.path.isfile(fs_path)):
+		yield fs_path
+	else:
+		for dirname, dirnames, filenames in os.walk(fs_path):
+			for filename in filenames:
+				yield os.path.join(dirname, filename)
 
 # finds all video files located under a directory
 def find_video_files(fs_path):
-	if (os.path.isfile(fs_path) and is_video_file(fs_path)):
-		return [fs_path]
-	elif (os.path.isdir(fs_path)):
-		all_files = recursive_list_files(fs_path)
-		return filter(is_video_file, all_files)
+	all_files = recursive_list_files(fs_path)
+	return filter(is_video_file, all_files)
 
 # 
 # recursively transverses the directory, detecting video files:
@@ -80,7 +80,6 @@ def locate(origin, destination):
 	target_file = os.path.join(destination, basename)
 	flag_required_subtitles(basename, destination)
 	os.link(origin, target_file)
-
 
 def process_movie_file(file_path, metadata):
 	dest = os.path.join(movies_dir, metadata["title"])
