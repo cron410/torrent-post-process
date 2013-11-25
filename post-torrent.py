@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Usage:
-# prueba.py [-h] torrent_path movies_dir series_dir
+# post-torrent.py [-h] torrent_path movies_dir series_dir
 #
 ##############################################################################
 
