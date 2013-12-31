@@ -14,6 +14,7 @@ import periscope
 import fs_help
 import re
 import shutil
+from datetime import datetime, timedelta
 
 def parse_args():
 	parser = argparse.ArgumentParser(description=
@@ -51,6 +52,11 @@ def download_subtitle(video_file_path, language):
 		print "Subtitle for " + video_file_path + " not found"
 		return False
 
+def flag_expired(subtitle_flag):
+	limit_ts = datetime.today() - timedelta(days=3)
+	file_ts = datetime.fromtimestamp(os.path.getmtime(subtitle_flag))
+	return file_ts < limit_ts
+
 ##############################################################################
 
 args = parse_args()
@@ -60,5 +66,5 @@ subdl = periscope.Periscope("/tmp/periscope-cache")
 for flag in subtitle_flags(video_path):
 	video_file = extract_video_file(flag)
 	language = extract_language(flag)
-	if download_subtitle(video_file, language):
+	if download_subtitle(video_file, language) or flag_expired(flag):
 		os.remove(flag)
