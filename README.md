@@ -57,9 +57,24 @@ movies
     `-- movie.es.srt
 ```
 
-#### Configuring with transmission
+### Configuring with transmission
 
-Check out the `examples` subdirectory for an example Transmission configuration script.
+If you have installed Transmission Daemon (`transmission-daemon` package on Debian/Ubuntu), you can
+configure it to run a script automatically after a torrent finishes (check out /etc/transmission-daemon/settings.json).
+
+All you should do in this script is build the path to the torrent output file/directory and execute `relocate.py`
+and `subtitles.py` in order.
+
+Since the script is run by the transmission user, you can run into file system permission issues. To avoid these, I use
+ssh in the transmission script to do the work with my own user:
+
+```
+TORRENT_PATH=$TR_TORRENT_DIR/$TR_TORRENT_NAME
+ssh pi@localhost sh /home/pi/transmission/post/post.sh \"$TORRENT_PATH\"
+```
+
+Note that to do this you should have the corresponding ssh keys already setup. Check out the `examples` subdirectory for
+a complete execution script.
 
 ### Dependencies and acknowledgements
 
