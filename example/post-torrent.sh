@@ -31,16 +31,18 @@ SUBTITLES_SCRIPT=/home/pi/transmission/git/subtitles.py
 VIDEO_PATH=/mnt/PASSPORT/video 
 MOVIES_PATH=$VIDEO_PATH/pelis
 SERIES_PATH=$VIDEO_PATH/series
- 
-LOGFILE=/home/pi/transmission/post/post.log
- 
-echo "Moving files form $1 to $VIDEO_PATH" >> $LOGFILE
+
+LOGFILE=/home/pi/transmission/post/post.log	
+
+function _log { echo $1 >> $LOGFILE } 
+
+_log "Moving files form $1 to $VIDEO_PATH"
 python $RELOCATE_SCRIPT "$1" "$MOVIES_PATH" "$SERIES_PATH"
  
-echo "Downloading subtitles" >> $LOGFILE
+_log "Downloading subtitles"
 python $SUBTITLES_SCRIPT "$VIDEO_PATH"
  
-echo "Notifying via email" >> $LOGFILE
+_log "Notifying via email"
 basename "$1" | mail -s "Transmission download finished" you@email.com
  
-echo "==========================================================" >> $LOGFILE
+_log "=========================================================="
