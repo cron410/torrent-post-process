@@ -36,7 +36,7 @@ LOGFILE=/home/pi/transmission/post/post.log
 
 function _log { echo $1 >> $LOGFILE } 
 
-_log "Moving files form $1 to $VIDEO_PATH"
+_log "Moving files from $1 to $VIDEO_PATH"
 python $RELOCATE_SCRIPT "$1" "$MOVIES_PATH" "$SERIES_PATH"
  
 _log "Downloading subtitles"
