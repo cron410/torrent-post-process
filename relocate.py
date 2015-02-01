@@ -45,7 +45,7 @@ def find_video_files(fs_path):
 def process_all_files(fs_path):
 	undecided = []
 	for f in find_video_files(fs_path):
-		metadata = guessit.guess_video_info(f, info = "filename")
+		metadata = guessit.guess_file_info(f, info = "filename")
 		if (metadata["type"] == "movie"):
 			process_movie_file(f, metadata)
 		elif (metadata["type"] == "episode"):
