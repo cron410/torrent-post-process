@@ -12,6 +12,8 @@ import os
 import guessit
 import argparse
 import fs_help
+import sys        #dont know if this is needed
+import shutil
 
 def parse_args():
 	parser = argparse.ArgumentParser(description=
@@ -48,8 +50,8 @@ def process_all_files(fs_path):
 		metadata = guessit.guess_file_info(f, info = "filename")
 		if (metadata["type"] == "movie"):
 			process_movie_file(f, metadata)
-		elif (metadata["type"] == "episode"):
-			process_episode_file(f, metadata)
+#		elif (metadata["type"] == "episode"):
+#			process_episode_file(f, metadata)
 		else:
 			undecided.append(f)
 	if (undecided):
@@ -58,11 +60,11 @@ def process_all_files(fs_path):
 # Extracts the base filename from file_pat and creates
 # a missing subtitle flag (eg: "movie.en.srt.pending")
 # in the destination directory
-def flag_required_subtitles(basename, destination):
-	es_flag = os.path.join(destination, basename + ".es.srt.pending")
-	en_flag = os.path.join(destination, basename + ".en.srt.pending")
-	open(es_flag, 'w').close()
-	open(en_flag, 'w').close()
+#def flag_required_subtitles(basename, destination):
+#	es_flag = os.path.join(destination, basename + ".es.srt.pending")
+#	en_flag = os.path.join(destination, basename + ".en.srt.pending")
+#	open(es_flag, 'w').close()
+#	open(en_flag, 'w').close()
 
 # Creates a hard link to the video in the destination directory
 # (creating it if necessary), and creates missing subtitle flags
@@ -73,18 +75,19 @@ def locate(origin, destination):
 	basename = os.path.basename(origin)
 	target_file = os.path.join(destination, basename)
 	flag_required_subtitles(basename, destination)
-	os.link(origin, target_file)
+#	os.link(origin, target_file)
+	shutil.copyfile(origin, target_file)
 
 def process_movie_file(file_path, metadata):
 	dest = os.path.join(movies_dir,
 						metadata["title"].lower())
 	locate (file_path, dest)
 
-def process_episode_file(file_path, metadata):
-	dest = os.path.join(series_dir,
-						metadata["series"].lower(),
-						"s" + str(metadata["season"]).zfill(2))
-	locate (file_path, dest)
+#def process_episode_file(file_path, metadata):
+#	dest = os.path.join(series_dir,
+#						metadata["series"].lower(),
+#						"s" + str(metadata["season"]).zfill(2))
+#	locate (file_path, dest)
 
 
 ##############################################################################
